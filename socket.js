@@ -12,8 +12,8 @@ wss.broadcast = data => {
 };
 
 wss.on('connection', function connection(ws) {
-  console.log('client connected', wss.clients.length);
-  ws.on('close', () => console.log('client disconnected', wss.clients.length));
+  console.log('client connected', wss.clients.size);
+  ws.on('close', () => console.log('client disconnected', wss.clients.size));
 });
 
 const etherSocket = new WebSocket('ws://listen.etherlisten.com:8546');

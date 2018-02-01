@@ -29,7 +29,7 @@
 
   var etherSocket, showBlock, showTx;
 
-  etherSocket = new WebSocket("ws://ethersocket.herokuapps.com");
+  etherSocket = new WebSocket("ws://ethersocket.herokuapp.com");
 
   etherSocket.onmessage = function({data}) {
     data = JSON.parse(data);
