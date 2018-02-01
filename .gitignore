@@ -1,6 +1,2 @@
 .idea
 node_modules
-socket.js
-package.json
-package-lock.json
-Procfile
