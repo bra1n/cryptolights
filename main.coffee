@@ -29,7 +29,7 @@
 #      showTx 'nano', {amount: payload.amount / Math.pow(10, 30), fee: 0, hash: payload.hash}
 #
 
-etherSocket = new WebSocket "ws://localhost:8546"
+etherSocket = new WebSocket "ws://ethersocket.herokuapps.com"
 etherSocket.onmessage = ({data}) ->
   data = JSON.parse data
   if data.type is 'tx'
