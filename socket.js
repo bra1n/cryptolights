@@ -11,6 +11,11 @@ wss.broadcast = data => {
   });
 };
 
+wss.on('connection', function connection(ws) {
+  console.log('client connected', wss.clients.length);
+  ws.on('close', () => console.log('client disconnected', wss.clients.length));
+});
+
 const etherSocket = new WebSocket('ws://listen.etherlisten.com:8546');
 
 etherSocket.on('open', () => {
@@ -65,7 +70,7 @@ etherSocket.on('message', (data) => {
         let transactions = data.result.transactions.length;
         let volumeSent = parseInt(data.result.gasUsed);
         let blockSize = parseInt(data.result.size);
-        console.log('Block', blockHeight, transactions, volumeSent, blockSize);
+        // console.log('Block', blockHeight, transactions, volumeSent, blockSize);
         wss.broadcast(JSON.stringify({type: 'block', blockHeight, transactions, volumeSent, blockSize}));
       } else if (data.result && data.result.input) {
         // transaction received
@@ -78,7 +83,7 @@ etherSocket.on('message', (data) => {
         const gas = parseInt(transaction.gas);
         const gasPrice = parseInt(transaction.gasPrice);
         const fee = gas * gasPrice / 1000000000000000000;
-        console.log('Transaction', ethers, hash, to, isContract, fee);
+        // console.log('Transaction', ethers, hash, to, isContract, fee);
         wss.broadcast(JSON.stringify({type: 'tx', ethers, hash, to, isContract, fee}));
       }
   }
