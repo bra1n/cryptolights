@@ -1,3 +1,108 @@
-body {
-    background: black;
+body, html {
+  background: black;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  color: white;
+  background: url('bg.jpg') no-repeat center bottom;
+  background-size: cover;
+}
+
+div.price {
+  color: white;
+}
+
+div.price:before {
+  content: '$';
+}
+
+div.currencies {
+  display: flex;
+  height: 100%;
+}
+
+div.currencies > div {
+  position: relative;
+  width: 25%;
+  height: 100%;
+}
+
+div.dots {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 0;
+  bottom: 0;
+}
+
+div.dots p {
+  width: 100%;
+  height: 20px;
+  position: absolute;
+  animation: meteor 5s linear;
+  background: linear-gradient(to bottom, #b8e1fc 0%,#a9d2f3 10%,#90bae4 25%,#90bcea 37%,#90bff0 50%,#6ba8e5 51%,#a2daf5 83%,#bdf3fd 100%);
+  border-radius: 0;
+  box-shadow: 
+    inset 0 0 15px #fff,
+    0 0 20px rgba(255, 255, 255, 0.62);;
+}
+
+div.dots div {
+  content: " ";
+  background: red;
+  position: absolute;
+  animation: meteor 5s ease-in;
+  border-radius: 0;
+  min-width: 5px;
+  min-height: 5px;
+  box-shadow: 
+    inset 0 5px 5px rgba(255, 255, 255, 0.3),
+    inset 0 10px 10px rgba(255, 255, 255, 0.3),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.5); 
+  margin-bottom: 70px;
+  border: 1px solid transparent;
+}
+
+div.dots div span {
+  animation: flames 2s infinite;
+  width: 10px;
+  left: 50%;
+  margin-left: -5px;
+  bottom: 100%;
+  margin-bottom: 10px;
+  position: absolute;
+  background: linear-gradient(to bottom, #ffee00 0%,#ff0000 83%,#ffffff 100%);
+  border-radius: 0;
+  font-weight: bold;
+  text-indent: 15px;
+  box-shadow: 
+    inset 0 0 5px #fff,
+    0 0 5px #fff84a,
+    0 0 10px #ff4141;
+}
+
+@keyframes flames {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes meteor {
+  0% {
+    bottom: 100%;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    bottom: 0;
+  }
 }
