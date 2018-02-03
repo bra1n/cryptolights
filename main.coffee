@@ -2,7 +2,7 @@ currencies = ['btc', 'eth', 'ltc', 'xrb']
 prices = {}
 
 # get current price
-do updatePrices = ->
+updatePrices = ->
   currencyAPI = 'https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms='
   $.get currencyAPI + currencies.join(',').toUpperCase(), (data) ->
     if data
@@ -57,7 +57,6 @@ bitcoinSocket.onmessage = ({data}) ->
       amount: valOut
       fee: fee
       recipients: data.x.out.map (out) -> [out.addr, out.value/100000000]
-
   else
     showBlock 'btc', data.x
 
@@ -73,64 +72,36 @@ nanoSocket.onmessage = ({data}) ->
       showTx 'xrb', {amount: payload.amount / Math.pow(10, 30), fee: 0, hash: payload.hash}
 
 # ether live feed
-#etherSocket = new WebSocket "ws://ethersocket.herokuapp.com"
-#etherSocket.onmessage = ({data}) ->
-#  data = JSON.parse data
-#  if data.type is 'tx'
-#    showTx 'eth', {amount: data.ethers, fee: data.fee, hash: data.hash}
-#  else
-#    showBlock 'eth', data
-
-####################
-### calculations ###
-####################
-calculateWidth = (price) ->
-  Math.log10(1+price) * 10
-
-calculateHeight = (fee) ->
-  Math.min(3, Math.log10(1 + fee))/3 * 200
-
-calculateColor = (price) ->
-  percent = Math.min(6, Math.log10(1+price))/6
-  start = [0, 0, 255]
-  end = [255, 0, 0]
-  result = [
-    start[0] + percent * (end[0] - start[0])
-    start[1] + percent * (end[1] - start[1])
-    start[2] + percent * (end[2] - start[2])
-  ]
-  '#'+result.map((c) -> ('0'+Math.round(c).toString(16)).substr(-2)).join('')
-
-calculateDuration = (fee) ->
-  if fee then 6000 - Math.round(3000 * Math.min(2, Math.log10(1+fee))/2) else 3000
+etherSocket = new WebSocket "ws://ethersocket.herokuapp.com"
+etherSocket.onmessage = ({data}) ->
+  data = JSON.parse data
+  if data.type is 'tx'
+    showTx 'eth', {amount: data.ethers, fee: data.fee, hash: data.hash}
+  else
+    showBlock 'eth', data
 
 #################
 ### rendering ###
 #################
+lanes = {}
+
 showTx = (currency, tx) ->
-  dot = $ '<div></div>'
   price = tx.amount*prices[currency]
   fee = tx.fee*prices[currency]
-  size = calculateWidth(price)
-  dot.css
-    width: size + 'px'
-    height: size + 'px'
-    backgroundColor: calculateColor(price)
-    animationDuration: calculateDuration(fee) + 'ms'
-    marginLeft: -1 * size / 2 + 'px'
-    left: Math.random()*100 +'%'
-  $('.'+currency+' .dots').append dot
-  if tx.fee
-    trail = $ '<span></span>'
-#    trail.text Math.round(tx.fee * prices[currency]*10)/10
-    trail.css
-      height: calculateHeight(fee) + 'px'
-    dot.append trail
-  setTimeout (-> dot.remove()), calculateDuration(fee)
-#  console.log 'tx', currency, tx
 
-showBlock = (currency, block) ->
-  console.log block
-  block = $ '<p></p>'
-  $('.'+currency+' .dots').append block
-  setTimeout (-> block.remove()), 5000
+  lanes[currency].addMeteor
+    speed: if fee then 2 + 4 * Math.min(2, Math.log10(1+fee))/2 else 6
+    hue: if price then 220 - 220 * Math.min(6, Math.log10(1+price))/6 else 220
+    thickness: Math.max(5, Math.log10(1+price) * 10)
+    length: Math.min(3, Math.log10(1 + fee))/3 * 250
+
+showBlock = (currency) ->
+  lanes[currency].addBlock()
+
+$ ->
+  updatePrices()
+  $('.currencies > div').each ->
+    currency = $(@).attr 'class'
+    canvas = $ '<canvas></canvas>'
+    $('.'+currency).append canvas
+    lanes[currency] = new CanvasRenderer canvas.get(0)
