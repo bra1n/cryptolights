@@ -11,6 +11,7 @@ class CanvasRenderer
     #@ctx.shadowBlur = 25
     #@ctx.shadowColor = 'hsla(0, 0%, 60%, 1)'
     @ctx.lineCap = 'round'
+    @c.addEventListener 'click', @handleClick.bind(@)
     @render()
 
   rand: (a,b) -> ~~((Math.random()*(b-a+1))+a)
@@ -58,7 +59,18 @@ class CanvasRenderer
         hue: block.hue
         light: 50
 
-  addMeteor: ({speed, hue, thickness, length}) ->
+  handleClick: ({pageX, pageY}) ->
+    cx = pageX - @c.getBoundingClientRect().left
+    cy = pageY - @c.getBoundingClientRect().top
+    console.log 'click', cx, cy
+    for {x, y, thickness, link} in @meteors.reverse()
+      t = thickness * 2
+      if cx >= x-t and cx <= x+t and cy >= y-t and cy <= y+t
+        console.log(link)
+        window.open link
+        break
+
+  addMeteor: ({speed, hue, thickness, length, link}) ->
     return if @meteors.length >= @meteorMax
     @meteors.push
       x: Math.round(@rand(thickness, @cw-thickness))
@@ -69,6 +81,7 @@ class CanvasRenderer
       length: Math.max(length, 10)
       alpha: 1
       timestamp: new Date().getTime()
+      link: link
     @meteors.sort (a,b) -> a.thickness - b.thickness
 
   updateMeteor: (meteor) ->

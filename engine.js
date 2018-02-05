@@ -15,6 +15,7 @@ CanvasRenderer = class CanvasRenderer {
     //@ctx.shadowBlur = 25
     //@ctx.shadowColor = 'hsla(0, 0%, 60%, 1)'
     this.ctx.lineCap = 'round';
+    this.c.addEventListener('click', this.handleClick.bind(this));
     this.render();
   }
 
@@ -91,7 +92,28 @@ CanvasRenderer = class CanvasRenderer {
     return results;
   }
 
-  addMeteor({speed, hue, thickness, length}) {
+  handleClick({pageX, pageY}) {
+    var cx, cy, j, len, link, ref, results, t, thickness, x, y;
+    cx = pageX - this.c.getBoundingClientRect().left;
+    cy = pageY - this.c.getBoundingClientRect().top;
+    console.log('click', cx, cy);
+    ref = this.meteors.reverse();
+    results = [];
+    for (j = 0, len = ref.length; j < len; j++) {
+      ({x, y, thickness, link} = ref[j]);
+      t = thickness * 2;
+      if (cx >= x - t && cx <= x + t && cy >= y - t && cy <= y + t) {
+        console.log(link);
+        window.open(link);
+        break;
+      } else {
+        results.push(void 0);
+      }
+    }
+    return results;
+  }
+
+  addMeteor({speed, hue, thickness, length, link}) {
     if (this.meteors.length >= this.meteorMax) {
       return;
     }
@@ -103,7 +125,8 @@ CanvasRenderer = class CanvasRenderer {
       thickness: thickness || this.rand(10, 20),
       length: Math.max(length, 10),
       alpha: 1,
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      link: link
     });
     return this.meteors.sort(function(a, b) {
       return a.thickness - b.thickness;
