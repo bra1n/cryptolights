@@ -137,7 +137,7 @@ CanvasRenderer = class CanvasRenderer {
     meteor.y = Math.round(meteor.y + meteor.speed);
     if (meteor.y / this.ch > 0.75) {
       meteor.alpha = Math.max(0, 1 - (4 * meteor.y / this.ch - 3));
-      if (meteor.thickness > 0.05) {
+      if (meteor.thickness > 0.1) {
         return meteor.thickness -= 0.05;
       }
     }

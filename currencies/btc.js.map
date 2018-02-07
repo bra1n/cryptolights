@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "btc.js",
+  "sourceRoot": "",
+  "sources": [
+    "btc.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA;;AAAM,MAAN,MAAA,IAAA;EACE,WAAa,CAAA,CAAA;IACX,IAAC,CAAA,EAAD,GAAM;IACN,IAAC,CAAA,SAAD,GAAa;EAFF;;EAIb,KAAO,CAAC,IAAD,EAAO,OAAP,CAAA;IACL,IAAW,IAAC,CAAA,EAAZ;MAAA,IAAC,CAAA,IAAD,CAAA,EAAA;;IACA,IAAC,CAAA,EAAD,GAAM,IAAI,SAAJ,CAAc,IAAC,CAAA,SAAf;IACN,IAAC,CAAA,EAAE,CAAC,MAAJ,GAAa,CAAA,CAAA,GAAA;MACX,IAAC,CAAA,EAAE,CAAC,IAAJ,CAAS,IAAI,CAAC,SAAL,CAAe;QAAA,EAAA,EAAI;MAAJ,CAAf,CAAT;aACA,IAAC,CAAA,EAAE,CAAC,IAAJ,CAAS,IAAI,CAAC,SAAL,CAAe;QAAA,EAAA,EAAI;MAAJ,CAAf,CAAT;IAFW;IAGb,IAAC,CAAA,EAAE,CAAC,SAAJ,GAAgB,QAAA,CAAC,CAAC,IAAD,CAAD,CAAA;AACd,UAAA,GAAA,EAAA,CAAA,EAAA,KAAA,EAAA,CAAA,EAAA,GAAA,EAAA,IAAA,EAAA,MAAA,EAAA,GAAA,EAAA,IAAA,EAAA,KAAA,EAAA;MAAA,IAAA,GAAO,IAAI,CAAC,KAAL,CAAW,IAAX;MACP,IAAG,IAAI,CAAC,EAAL,KAAW,KAAd;QACE,GAAA,GAAM;QACN,MAAA,GAAS;QACT,KAAA,GAAQ;AACR;QAAA,KAAA,qCAAA;;UAAA,KAAA,IAAS,KAAK,CAAC,QAAQ,CAAC,KAAf,GAAqB;QAA9B;AACA;QAAA,KAAA,wCAAA;;UAAA,MAAA,IAAU,MAAM,CAAC,KAAP,GAAa;QAAvB;QACA,GAAA,GAAM,IAAI,CAAC,GAAL,CAAS,KAAA,GAAQ,MAAjB,EAAyB,CAAzB;4CACN,KAAM;UACJ,MAAA,EAAQ,MADJ;UAEJ,GAAA,EAAK,GAFD;UAGJ,IAAA,EAAM,6BAAA,GAAgC,IAAI,CAAC,CAAC,CAAC,IAHzC;UAIJ,UAAA,EAAY,IAAI,CAAC,CAAC,CAAC,GAAG,CAAC,GAAX,CAAe,QAAA,CAAC,GAAD,CAAA;mBAAS,CAClC,GAAG,CAAC,IAD8B,EACxB,GAAG,CAAC,KAAJ,GAAY,SADY;UAAT,CAAf;QAJR,YAPR;OAAA,MAAA;+CAgBE,QAAS,IAAI,CAAC,YAhBhB;;IAFc;WAmBhB;MAAA,IAAA,EAAM,QAAA,CAAA,CAAA;QACJ,IAAC,CAAA,EAAE,CAAC,KAAJ,CAAA;eACA,IAAC,CAAA,EAAD,GAAM;MAFF;IAAN;EAzBK;;AALT",
+  "sourcesContent": [
+    "class BTC\n  constructor: ->\n    @ws = null\n    @socketUrl = \"wss://ws.blockchain.info/inv\"\n\n  start: (txCb, blockCb) ->\n    @stop() if @ws\n    @ws = new WebSocket @socketUrl\n    @ws.onopen = =>\n      @ws.send JSON.stringify op: 'unconfirmed_sub'\n      @ws.send JSON.stringify op: 'blocks_sub'\n    @ws.onmessage = ({data}) ->\n      data = JSON.parse data\n      if data.op is 'utx'\n        fee = 0\n        valOut = 0\n        valIn = 0\n        valIn += input.prev_out.value/100000000 for input in data.x.inputs\n        valOut += output.value/100000000 for output in data.x.out\n        fee = Math.max valIn - valOut, 0\n        txCb? {\n          amount: valOut\n          fee: fee\n          link: 'https://blockchain.info/tx/' + data.x.hash\n          recipients: data.x.out.map (out) -> [\n            out.addr, out.value / 100000000\n          ]\n        }\n      else\n        blockCb? data.x\n    stop: ->\n      @ws.close()\n      @ws = null"
+  ]
+}

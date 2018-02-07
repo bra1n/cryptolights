@@ -88,7 +88,7 @@ class CanvasRenderer
     meteor.y = Math.round(meteor.y + meteor.speed)
     if meteor.y / @ch > 0.75
       meteor.alpha = Math.max(0, 1-(4*meteor.y/@ch-3))
-      meteor.thickness -= 0.05 if meteor.thickness > 0.05
+      meteor.thickness -= 0.05 if meteor.thickness > 0.1
 
   renderMeteor: (meteor) ->
     @ctx.save()

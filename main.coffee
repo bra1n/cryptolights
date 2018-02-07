@@ -5,18 +5,21 @@ currencies =
   xrb: new XRB()
 prices = {}
 lanes = {}
+stats = {}
 
 # render TX
 showTx = (currency, tx) ->
-  price = tx.amount*prices[currency]
+  value = tx.amount*prices[currency]
   fee = tx.fee*prices[currency]
 
   lanes[currency].addMeteor
     speed: if fee then 2 + 4 * Math.min(2, Math.log10(1+fee))/2 else 6
-    hue: if price then 220 - 220 * Math.min(6, Math.log10(1+price))/6 else 220
-    thickness: Math.max(5, Math.log10(1+price) * 10)
+    hue: if value then 220 - 220 * Math.min(6, Math.log10(1+value))/6 else 220
+    thickness: Math.max(5, Math.log10(1+value) * 10)
     length: Math.min(3, Math.log10(1 + fee))/3 * 250
     link: tx.link
+
+  updateStats currency, value, fee
 
 # render block
 showBlock = (currency) ->
@@ -30,9 +33,30 @@ updatePrices = (currencies) ->
       for currency, price of data
         currency = currency.toLowerCase()
         prices[currency] = Math.round(1/price*100)/100
-        $('.'+currency+' .price').text prices[currency]
+        $(".#{currency} .price").text prices[currency].toLocaleString(undefined, { style: 'currency', currency: 'USD' })
 
   setTimeout updatePrices.bind(null, currencies), 10*1000
+
+# update stats for a currency, called whenever there is a new TX
+# to do that, keep a log of the last 60 seconds of tx
+updateStats = (currency, value = 0, fee = 0) ->
+  stats[currency] = [] unless stats[currency]?
+  stat = stats[currency]
+  timestamp = new Date().getTime()
+  stat.push {timestamp, value, fee}
+  i = stat.length
+  stat.splice(i, 1) while i-- when timestamp - stat[i].timestamp > 60*1000
+  duration = Math.max(stat[stat.length - 1].timestamp - stat[0].timestamp, 1) / 1000
+  txPerSecond = Math.round(stat.length / duration * 10)/10
+  #valuePerSecond = Math.round(stat.reduce(((a, b) -> a + b.value), 0) / duration)
+  valuePerTx = Math.round(stat.reduce(((a, b) -> a + b.value), 0) / stat.length)
+  #feePerSecond = Math.round(stat.reduce(((a, b) -> a + b.fee), 0) / duration * 100)/100
+  feePerTx = Math.round(stat.reduce(((a, b) -> a + b.fee), 0) / stat.length * 100)/100
+  $(".#{currency} .stats").text """
+    #{txPerSecond.toLocaleString()} tx/s
+    #{valuePerTx.toLocaleString(undefined, { style: 'currency', minimumFractionDigits: 0, maximumFractionDigits:0, currency: 'USD' })} value/tx
+    #{feePerTx.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} fee/tx
+  """
 
 # start everything
 $ ->

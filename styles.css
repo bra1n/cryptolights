@@ -6,14 +6,37 @@ body, html {
   color: white;
   background: url('bg.jpg') no-repeat center bottom;
   background-size: cover;
+  font-family: 'Oswald', sans-serif;
 }
 
-div.price {
+div.text {
+  color: #b2d3ff;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  text-shadow: 0 0 10px #000;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  font-size: 16px;
+  z-index: 10;
+}
+
+span.label {
+  font-weight: bold;
   color: white;
 }
 
-div.price:before {
-  content: '$';
+span.price {
+  display: block;
+}
+
+span.stats {
+  white-space: pre;
+  text-align: right;
+  z-index: 10;
+  float: right;
+  position: relative;
 }
 
 div.currencies {
@@ -25,6 +48,9 @@ div.currencies > div {
   position: relative;
   width: 25%;
   height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  /* font-weight: bold; */
 }
 
 div.currencies canvas {
