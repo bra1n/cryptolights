@@ -62,33 +62,35 @@ class CanvasRenderer
   handleClick: ({pageX, pageY}) ->
     cx = pageX - @c.getBoundingClientRect().left
     cy = pageY - @c.getBoundingClientRect().top
-    console.log 'click', cx, cy
     for {x, y, thickness, link} in @meteors.reverse()
       t = thickness * 2
       if cx >= x-t and cx <= x+t and cy >= y-t and cy <= y+t
-        console.log(link)
         window.open link
         break
 
-  addMeteor: ({speed, hue, thickness, length, link}) ->
-    return if @meteors.length >= @meteorMax
+  addMeteor: ({speed, hue, thickness, length, link, donation}) ->
+    return if @meteors.length >= @meteorMax and !donation
     @meteors.push
       x: Math.round(@rand(thickness, @cw-thickness))
       y: -50
-      speed: speed || @rand(1, 3)
-      hue: Math.round(hue) || @rand(0, 360)
-      thickness: thickness || @rand(10,20)
+      vy: if donation then speed*0.8 else speed
+      hue: Math.round(hue)
+      thickness: if donation then Math.max(20, thickness*2) else thickness
       length: Math.max(length, 10)
       alpha: 1
       timestamp: new Date().getTime()
       link: link
+      donation: donation
     @meteors.sort (a,b) -> a.thickness - b.thickness
 
   updateMeteor: (meteor) ->
-    meteor.y = Math.round(meteor.y + meteor.speed)
+    meteor.y = Math.round(meteor.y + meteor.vy)
+    meteor.hue = meteor.hue + 3 % 360 if meteor.donation
     if meteor.y / @ch > 0.75
       meteor.alpha = Math.max(0, 1-(4*meteor.y/@ch-3))
       meteor.thickness -= 0.05 if meteor.thickness > 0.1
+
+
 
   renderMeteor: (meteor) ->
     @ctx.save()
@@ -153,16 +155,16 @@ class CanvasRenderer
     @ctx.restore()
 
   createParticles: (meteor) ->
-    if @particles.length < @particleMax - @meteors.length and meteor.thickness > 5
+    if meteor.donation or (@particles.length < @particleMax - @meteors.length and meteor.thickness > 5)
       @particles.push
         x: meteor.x + (@rand(0, meteor.thickness) - meteor.thickness/2)
         y: meteor.y + (@rand(0, meteor.thickness) - meteor.thickness/2)
         vx: (@rand(0, 100)-50)/100
         vy: (@rand(-25, 75)-50)/100
-        radius: Math.round(@rand(1, 6)/2)
-        alpha: @rand(15, 30)/100
+        radius: if meteor.donation then meteor.thickness*0.2 else Math.round(@rand(1, 6)/2)
+        alpha: if meteor.donation then 0.5 else @rand(15, 30)/100
         hue: meteor.hue
-        light: 50
+        light: if meteor.donation then 0 else 50
 
   updateParticles: () ->
     i = @particles.length

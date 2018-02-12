@@ -2,6 +2,7 @@ class ETH
   constructor: ->
     @ws = null
     @socketUrl = "ws://ethersocket.herokuapp.com"
+    @donationAddress = ""
 
   start: (txCb, blockCb) ->
     @stop() if @ws
@@ -13,7 +14,7 @@ class ETH
           amount: data.ethers
           fee: data.fee
           link: 'https://etherscan.io/tx/' + data.hash
-          recipients: [data.to]
+          donation: data.to is @donationAddress
         }
       else
         blockCb? data

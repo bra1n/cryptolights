@@ -18,6 +18,7 @@ showTx = (currency, tx) ->
     thickness: Math.max(5, Math.log10(1+value) * 10)
     length: Math.min(3, Math.log10(1 + fee))/3 * 250
     link: tx.link
+    donation: tx.donation
 
   updateStats currency, value, fee
 
@@ -61,6 +62,8 @@ updateStats = (currency, value = 0, fee = 0) ->
 # start everything
 $ ->
   updatePrices Object.keys(currencies)
+  $('.overlay').hide().on 'click', (e) ->
+    $(this).fadeOut() if $(e.target).is('.overlay')
   $('.currencies > div').each ->
     currency = $(@).attr 'class'
     if currencies[currency]?
@@ -68,3 +71,10 @@ $ ->
       canvas = $ '<canvas></canvas>'
       $('.'+currency).append canvas
       lanes[currency] = new CanvasRenderer canvas.get(0)
+
+      # donation links
+      if currencies[currency].donationAddress
+        $(this).find('.donate').on 'click', =>
+          $('.overlay').fadeToggle().find('.address').text currencies[currency].donationAddress
+      else
+        $(this).find('.donate').remove()

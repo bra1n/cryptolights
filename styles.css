@@ -1,16 +1,15 @@
 body, html {
-  background: black;
   padding: 0;
   margin: 0;
   height: 100%;
   color: white;
-  background: url('bg.jpg') no-repeat center bottom;
+  background: url('bg.jpg') no-repeat center bottom black;
   background-size: cover;
   font-family: 'Oswald', sans-serif;
 }
 
 div.text {
-  color: #b2d3ff;
+  color: #a4d2fd;
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -22,13 +21,47 @@ div.text {
   z-index: 10;
 }
 
-span.label {
+a {
+  color: white;
+  cursor: pointer;
+}
+
+a.label {
   font-weight: bold;
   color: white;
 }
 
+div.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+div.overlay .box {
+  display: inline-block;
+  text-align: center;
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+  height: auto;
+  border-radius: 10px;
+  cursor: default;
+}
+
+div.overlay .box b {
+  color: gold;
+  cursor: text;
+}
+
 span.price {
   display: block;
+  color: gold;
 }
 
 span.stats {
@@ -59,4 +92,24 @@ div.currencies canvas {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+div.btc {
+  background: url('currencies/btc.png') no-repeat center center;
+  background-size: 80% auto;
+}
+
+div.eth {
+  background: url('currencies/eth.png') no-repeat center center;
+  background-size: 80% auto;
+}
+
+div.ltc {
+  background: url('currencies/ltc.png') no-repeat center center;
+  background-size: 80% auto;
+}
+
+div.xrb {
+  background: url('currencies/xrb.png') no-repeat center center;
+  background-size: 80% auto;
 }

@@ -2,6 +2,7 @@ class BTC
   constructor: ->
     @ws = null
     @socketUrl = "wss://ws.blockchain.info/inv"
+    @donationAddress = ""
 
   start: (txCb, blockCb) ->
     @stop() if @ws
@@ -9,7 +10,7 @@ class BTC
     @ws.onopen = =>
       @ws.send JSON.stringify op: 'unconfirmed_sub'
       @ws.send JSON.stringify op: 'blocks_sub'
-    @ws.onmessage = ({data}) ->
+    @ws.onmessage = ({data}) =>
       data = JSON.parse data
       if data.op is 'utx'
         fee = 0
@@ -22,9 +23,7 @@ class BTC
           amount: valOut
           fee: fee
           link: 'https://blockchain.info/tx/' + data.x.hash
-          recipients: data.x.out.map (out) -> [
-            out.addr, out.value / 100000000
-          ]
+          donation: !!data.x.out.find (out) => out.addr is @donationAddress
         }
       else
         blockCb? data.x

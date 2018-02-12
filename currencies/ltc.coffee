@@ -6,6 +6,7 @@ class LTC
     @txFees = [0.000224, 0.0005]
     @txFeeTimestamp = 0
     @txFeeInterval = 3000 # how often to query for a fee
+    @donationAddress = ""
 
   start: (txCb, blockCb) ->
     @stop() if @ws
@@ -38,7 +39,7 @@ class LTC
             amount: payload.valueOut
             fee: Math.random() * Math.abs(@txFees[0] - @txFees[1]) + Math.min.apply(0, @txFees)
             link: 'https://insight.litecore.io/tx/' + payload.txid
-            recipients: payload.vout.map (value) -> Object.keys(value)[0]
+            donation: !!payload.vout.find (vout) => Object.keys(vout)[0] is @donationAddress
           }
         else
           blockCb? payload
