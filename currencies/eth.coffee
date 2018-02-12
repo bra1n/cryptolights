@@ -1,7 +1,7 @@
 class ETH
   constructor: ->
     @ws = null
-    @socketUrl = "ws://ethersocket.herokuapp.com"
+    @socketUrl = "wss://ethersocket.herokuapp.com"
     @donationAddress = ""
 
   start: (txCb, blockCb) ->

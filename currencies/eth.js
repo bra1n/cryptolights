@@ -4,7 +4,7 @@ var ETH;
 ETH = class ETH {
   constructor() {
     this.ws = null;
-    this.socketUrl = "ws://ethersocket.herokuapp.com";
+    this.socketUrl = "wss://ethersocket.herokuapp.com";
     this.donationAddress = "";
   }
 
