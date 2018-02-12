@@ -6,7 +6,7 @@ class LTC
     @txFees = [0.000224, 0.0005]
     @txFeeTimestamp = 0
     @txFeeInterval = 3000 # how often to query for a fee
-    @donationAddress = ""
+    @donationAddress = "LiVcWyeoPXNYekcdFkDr64QLG3u9G8BgLs"
 
   start: (txCb, blockCb) ->
     @stop() if @ws
