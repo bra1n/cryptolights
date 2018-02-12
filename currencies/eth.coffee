@@ -2,7 +2,7 @@ class ETH
   constructor: ->
     @ws = null
     @socketUrl = "wss://ethersocket.herokuapp.com"
-    @donationAddress = ""
+    @donationAddress = "0xf3Ac6fFCD6451682a753695e56425038dE2b79DD"
 
   start: (txCb, blockCb) ->
     @stop() if @ws
