@@ -9,8 +9,8 @@ stats = {}
 
 # render TX
 showTx = (currency, tx) ->
-  value = tx.amount*prices[currency]
-  fee = tx.fee*prices[currency]
+  value = tx.amount * (prices[currency] or 1)
+  fee = tx.fee * (prices[currency] or 1)
 
   lanes[currency].addMeteor
     speed: if fee then 2 + 4 * Math.min(2, Math.log10(1+fee))/2 else 6
