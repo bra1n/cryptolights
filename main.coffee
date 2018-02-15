@@ -23,8 +23,9 @@ showTx = (currency, tx) ->
   updateStats currency, value, fee
 
 # render block
-showBlock = (currency) ->
-  lanes[currency].addBlock()
+showBlock = (currency, block) ->
+  lanes[currency].addBlock Math.min(250, block.count / 4)
+  stats[currency].count = Math.max(0, stats[currency].count - block.count) if stats[currency]?
 
 # get current price
 updatePrices = (currencies) ->
@@ -41,20 +42,23 @@ updatePrices = (currencies) ->
 # update stats for a currency, called whenever there is a new TX
 # to do that, keep a log of the last 60 seconds of tx
 updateStats = (currency, value = 0, fee = 0) ->
-  stats[currency] = [] unless stats[currency]?
-  stat = stats[currency]
+  stats[currency] = {last: [], count: 0} unless stats[currency]?
+  # increase number of unverified TX
+  stats[currency].count++ unless currency is 'xrb'
+  # calculate stats for last 60s
+  last = stats[currency].last
   timestamp = new Date().getTime()
-  stat.push {timestamp, value, fee}
-  i = stat.length
-  stat.splice(i, 1) while i-- when timestamp - stat[i].timestamp > 60*1000
-  duration = Math.max(stat[stat.length - 1].timestamp - stat[0].timestamp, 1) / 1000
-  txPerSecond = Math.round(stat.length / duration * 10)/10
+  last.push {timestamp, value, fee}
+  i = last.length
+  last.splice(i, 1) while i-- when timestamp - last[i].timestamp > 60*1000
+  duration = Math.max(last[last.length - 1].timestamp - last[0].timestamp, 1) / 1000
+  txPerSecond = Math.round(last.length / duration * 10)/10
   #valuePerSecond = Math.round(stat.reduce(((a, b) -> a + b.value), 0) / duration)
-  valuePerTx = Math.round(stat.reduce(((a, b) -> a + b.value), 0) / stat.length)
+  valuePerTx = Math.round(last.reduce(((a, b) -> a + b.value), 0) / last.length)
   #feePerSecond = Math.round(stat.reduce(((a, b) -> a + b.fee), 0) / duration * 100)/100
-  feePerTx = Math.round(stat.reduce(((a, b) -> a + b.fee), 0) / stat.length * 100)/100
+  feePerTx = Math.round(last.reduce(((a, b) -> a + b.fee), 0) / last.length * 100)/100
   $(".#{currency} .stats").text """
-    #{txPerSecond.toLocaleString()} tx/s
+    #{txPerSecond.toLocaleString()} tx/s (#{stats[currency].count} unconfirmed)
     #{valuePerTx.toLocaleString(undefined, { style: 'currency', minimumFractionDigits: 0, maximumFractionDigits:0, currency: 'USD' })} value/tx
     #{feePerTx.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} fee/tx
   """

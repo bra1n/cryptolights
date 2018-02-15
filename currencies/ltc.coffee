@@ -3,6 +3,7 @@ class LTC
     @ws = null
     @socketUrl = "wss://insight.litecore.io/socket.io/?EIO=3&transport=websocket"
     @txApi = "https://insight.litecore.io/api/tx/"
+    @blockApi = "https://insight.litecore.io/api/block/"
     @txFees = [0.000224, 0.0005]
     @txFeeTimestamp = 0
     @txFeeInterval = 3000 # how often to query for a fee
@@ -42,7 +43,8 @@ class LTC
             donation: !!payload.vout.find (vout) => Object.keys(vout)[0] is @donationAddress
           }
         else
-          blockCb? payload
+          $.get @blockApi + payload, ({tx}) =>
+            blockCb? count: if tx then tx.length else 0
           
   stop: ->
     @ws.close()

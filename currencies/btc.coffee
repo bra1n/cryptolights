@@ -26,7 +26,7 @@ class BTC
           donation: !!data.x.out.find (out) => out.addr is @donationAddress
         }
       else
-        blockCb? data.x
+        blockCb? count: data.x.nTx
     stop: ->
       @ws.close()
       @ws = null

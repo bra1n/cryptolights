@@ -6,6 +6,8 @@ class CanvasRenderer
     @meteors = []
     @blocks = []
     @particles = []
+    @minFps = 45
+    @lastDraw = Date.now()
     @particleMax = 150
     @meteorMax = 100
     #@ctx.shadowBlur = 25
@@ -16,13 +18,14 @@ class CanvasRenderer
 
   rand: (a,b) -> ~~((Math.random()*(b-a+1))+a)
 
-  addBlock: () ->
+  addBlock: (thickness) ->
     return if @blocks.length >= 5
     @blocks.push
       y: -50
       speed: 5
       hue: 190
       alpha: .5
+      thickness: Math.round(thickness)
       
   updateBlocks: ->
     i = @blocks.length
@@ -39,7 +42,7 @@ class CanvasRenderer
       @ctx.beginPath()
       @ctx.moveTo(20, block.y)
       @ctx.lineTo(@cw-20, block.y)
-      @ctx.lineWidth = 10
+      @ctx.lineWidth = block.thickness
       @ctx.strokeStyle = 'hsla('+block.hue+', 80%, 50%, '+block.alpha+')'
       @ctx.stroke()
       @ctx.closePath()
@@ -69,7 +72,7 @@ class CanvasRenderer
         break
 
   addMeteor: ({speed, hue, thickness, length, link, donation}) ->
-    return if @meteors.length >= @meteorMax and !donation
+    return if (@meteors.length >= @meteorMax or @currentFps < @minFps) and !donation
     @meteors.push
       x: Math.round(@rand(thickness, @cw-thickness))
       y: -50
@@ -88,9 +91,7 @@ class CanvasRenderer
     meteor.hue = meteor.hue + 3 % 360 if meteor.donation
     if meteor.y / @ch > 0.75
       meteor.alpha = Math.max(0, 1-(4*meteor.y/@ch-3))
-      meteor.thickness -= 0.05 if meteor.thickness > 0.1
-
-
+      meteor.thickness -= 0.05 if meteor.thickness > 5
 
   renderMeteor: (meteor) ->
     @ctx.save()
@@ -195,7 +196,13 @@ class CanvasRenderer
 
   render: () ->
     requestAnimationFrame @render.bind(@)
+    @currentFps = Math.round(1000/(Date.now() - @lastDraw))
+    @lastDraw = Date.now()
     @clear()
+    # debug
+    #@ctx.font = '48px serif';
+    #@ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+    #@ctx.fillText(@currentFps, 10, 50);
     # blocks
     @updateBlocks()
     @renderBlocks()

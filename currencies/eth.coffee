@@ -17,7 +17,7 @@ class ETH
           donation: data.to is @donationAddress
         }
       else
-        blockCb? data
+        blockCb? count: data.transactions
 
   stop: ->
     @ws.close()
