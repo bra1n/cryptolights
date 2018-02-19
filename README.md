@@ -1,7 +1,7 @@
 # CryptoLights 
 Live transaction visualization for Bitcoin, Ethereum, Litecoin and Nano
 
-https://cryptolights.info
+http://cryptolights.info
 
 ## Explanation
 
