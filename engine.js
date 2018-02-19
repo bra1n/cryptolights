@@ -38,7 +38,7 @@ CanvasRenderer = class CanvasRenderer {
   }
 
   addBlock(thickness) {
-    if (this.blocks.length >= 5) {
+    if (this.blocks.length >= 5 || !this.running) {
       return;
     }
     return this.blocks.push({
@@ -127,6 +127,9 @@ CanvasRenderer = class CanvasRenderer {
   }
 
   addMeteor({speed, hue, thickness, length, link, donation}) {
+    if (!this.running) {
+      return;
+    }
     if ((this.meteors.length >= this.meteorMax || this.currentFps < this.minFps) && !donation) {
       return;
     }

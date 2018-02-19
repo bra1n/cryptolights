@@ -25,7 +25,7 @@ class CanvasRenderer
   rand: (a,b) -> ~~((Math.random()*(b-a+1))+a)
 
   addBlock: (thickness) ->
-    return if @blocks.length >= 5
+    return if @blocks.length >= 5 or not @running
     @blocks.push
       y: -50
       speed: 5
@@ -78,6 +78,7 @@ class CanvasRenderer
         break
 
   addMeteor: ({speed, hue, thickness, length, link, donation}) ->
+    return if not @running
     return if (@meteors.length >= @meteorMax or @currentFps < @minFps) and !donation
     @meteors.push
       x: Math.round(@rand(thickness, @cw-thickness))
