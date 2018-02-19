@@ -10,6 +10,7 @@
     <meta name="robots" content="index, follow">
 
     <link href="https://fonts.googleapis.com/css?family=Oswald:500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="styles.css" rel="stylesheet" type="text/css"/>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="currencies/btc.js"></script>
@@ -54,11 +55,32 @@
             </div>
         </div>
     </div>
+    <nav>
+        <i class="material-icons left">chevron_left</i>
+        <i class="material-icons right">chevron_right</i>
+        <i class="material-icons help">help_outline</i>
+    </nav>
     <div class="overlay">
-        <div class="box">
+        <div class="help box">
+            <b>Welcome to CryptoLights!</b><br><br>
+            Here's a little explanation for what you're looking at:<br>
+            You will see all live, <i>unconfirmed</i> transactions (except for NANO) being propagated to the net.
+            Each transaction "meteor" will have a color and size according to it's monetary value and
+            a trail according to the amount of fees paid for it. The higher the value of the
+            transaction, the bigger / redder the meteor. While higher fees make meteors go faster, the speed is not
+            the actual transaction speed, because those can vary wildly between different coins.
+            You can click on a meteor to see the transaction details behind it.<br>
+            <br>
+            Blue bars are mined blocks that turn unconfirmed transactions into confirmed transactions.<br><br>
+            This project is <a href="https://github.com/bra1n/cryptolights" target="_blank"><b>open source</b></a>!
+            A more detailed explanation (including how to set up a CryptoLights screensaver) can be found on the GitHub project.<br>
+            <br>
+            If you like what you see, feel free to send a donation to one of the donation addresses and watch it sparkle.<br>
+        </div>
+        <div class="donation box">
             Enjoying the lights? Feel free to send a donation to<br>
             <b class="address"></b><br>
-            Donations will be shown with a <i>special effect</i>. :-)
+            Donations meteors will have a <i>special effect</i>. :-)
         </div>
     </div>
 </body>

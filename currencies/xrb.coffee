@@ -13,7 +13,7 @@ class XRB
       data = data.match /^\d+(\[.+?)$/
       if data
         [type, payload] = JSON.parse(data[1])
-        if type is 'block' and payload.type is 'receive' # receive contains recipient address
+        if type is 'block' and (payload.type is 'send' or payload.type is 'receive')
           txCb? {
             amount: payload.amount / Math.pow(10, 30)
             fee: 0

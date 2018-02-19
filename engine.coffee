@@ -1,20 +1,26 @@
 class CanvasRenderer
   constructor: (@c) ->
     @ctx = @c.getContext '2d'
-    @cw = @c.width = @c.scrollWidth
-    @ch = @c.height = @c.scrollHeight
+    @resize @c
+    @minFps = 45
+    @particleMax = 150
+    @meteorMax = 100
     @meteors = []
     @blocks = []
     @particles = []
-    @minFps = 45
+    @running = no
     @lastDraw = Date.now()
-    @particleMax = 150
-    @meteorMax = 100
-    #@ctx.shadowBlur = 25
-    #@ctx.shadowColor = 'hsla(0, 0%, 60%, 1)'
-    @ctx.lineCap = 'round'
     @c.addEventListener 'click', @handleClick.bind(@)
     @render()
+
+  start: -> @running = yes
+
+  stop: -> @running = no
+
+  resize: (@c) ->
+    @cw = @c.width = @c.scrollWidth
+    @ch = @c.height = @c.scrollHeight
+    @ctx.lineCap = 'round'
 
   rand: (a,b) -> ~~((Math.random()*(b-a+1))+a)
 
@@ -87,6 +93,7 @@ class CanvasRenderer
     @meteors.sort (a,b) -> a.thickness - b.thickness
 
   updateMeteor: (meteor) ->
+    meteor.x = Math.round(@rand(meteor.thickness, @cw-meteor.thickness)) if meteor.x < meteor.thickness
     meteor.y = Math.round(meteor.y + meteor.vy)
     meteor.hue = meteor.hue + 3 % 360 if meteor.donation
     if meteor.y / @ch > 0.75
@@ -196,6 +203,7 @@ class CanvasRenderer
 
   render: () ->
     requestAnimationFrame @render.bind(@)
+    return unless @running
     @currentFps = Math.round(1000/(Date.now() - @lastDraw))
     @lastDraw = Date.now()
     @clear()

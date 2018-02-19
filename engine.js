@@ -5,20 +5,32 @@ CanvasRenderer = class CanvasRenderer {
   constructor(c) {
     this.c = c;
     this.ctx = this.c.getContext('2d');
-    this.cw = this.c.width = this.c.scrollWidth;
-    this.ch = this.c.height = this.c.scrollHeight;
+    this.resize(this.c);
+    this.minFps = 45;
+    this.particleMax = 150;
+    this.meteorMax = 100;
     this.meteors = [];
     this.blocks = [];
     this.particles = [];
-    this.minFps = 45;
+    this.running = false;
     this.lastDraw = Date.now();
-    this.particleMax = 150;
-    this.meteorMax = 100;
-    //@ctx.shadowBlur = 25
-    //@ctx.shadowColor = 'hsla(0, 0%, 60%, 1)'
-    this.ctx.lineCap = 'round';
     this.c.addEventListener('click', this.handleClick.bind(this));
     this.render();
+  }
+
+  start() {
+    return this.running = true;
+  }
+
+  stop() {
+    return this.running = false;
+  }
+
+  resize(c) {
+    this.c = c;
+    this.cw = this.c.width = this.c.scrollWidth;
+    this.ch = this.c.height = this.c.scrollHeight;
+    return this.ctx.lineCap = 'round';
   }
 
   rand(a, b) {
@@ -136,6 +148,9 @@ CanvasRenderer = class CanvasRenderer {
   }
 
   updateMeteor(meteor) {
+    if (meteor.x < meteor.thickness) {
+      meteor.x = Math.round(this.rand(meteor.thickness, this.cw - meteor.thickness));
+    }
     meteor.y = Math.round(meteor.y + meteor.vy);
     if (meteor.donation) {
       meteor.hue = meteor.hue + 3 % 360;
@@ -278,6 +293,9 @@ CanvasRenderer = class CanvasRenderer {
   render() {
     var i, meteor;
     requestAnimationFrame(this.render.bind(this));
+    if (!this.running) {
+      return;
+    }
     this.currentFps = Math.round(1000 / (Date.now() - this.lastDraw));
     this.lastDraw = Date.now();
     this.clear();

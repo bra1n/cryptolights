@@ -23,7 +23,7 @@ XRB = class XRB {
       data = data.match(/^\d+(\[.+?)$/);
       if (data) {
         [type, payload] = JSON.parse(data[1]);
-        if (type === 'block' && payload.type === 'receive') { // receive contains recipient address
+        if (type === 'block' && (payload.type === 'send' || payload.type === 'receive')) {
           return typeof txCb === "function" ? txCb({
             amount: payload.amount / Math.pow(10, 30),
             fee: 0,

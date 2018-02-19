@@ -4,15 +4,14 @@ currencies =
   ltc: new LTC()
   xrb: new XRB()
 prices = {}
-lanes = {}
 stats = {}
 
 # render TX
-showTx = (currency, tx) ->
+showTx = (engine, currency, tx) ->
   value = tx.amount * (prices[currency] or 1)
   fee = tx.fee * (prices[currency] or 1)
 
-  lanes[currency].addMeteor
+  engine.addMeteor
     speed: if fee then 2 + 4 * Math.min(2, Math.log10(1+fee))/2 else 6
     hue: if value then 220 - 220 * Math.min(6, Math.log10(1+value))/6 else 220
     thickness: Math.max(5, Math.log10(1+value) * 10)
@@ -23,8 +22,8 @@ showTx = (currency, tx) ->
   updateStats currency, value, fee
 
 # render block
-showBlock = (currency, block) ->
-  lanes[currency].addBlock Math.min(250, block.count / 4)
+showBlock = (engine, currency, block) ->
+  engine.addBlock Math.min(250, block.count / 4)
   stats[currency].count = Math.max(0, stats[currency].count - block.count) if stats[currency]?
 
 # get current price
@@ -63,22 +62,61 @@ updateStats = (currency, value = 0, fee = 0) ->
     #{feePerTx.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} fee/tx
   """
 
+# set up a lane
+initialize = (currency) ->
+  if currencies[currency]?
+    container = $(".#{currency}")
+    container.find("canvas").remove()
+    canvas = $ '<canvas></canvas>'
+    container.append canvas
+    engine = new CanvasRenderer canvas.get(0)
+    canvas.data 'engine', engine
+    engine.start() if container.is ':visible'
+    currencies[currency].start showTx.bind(null, engine, currency), showBlock.bind(null, engine, currency)
+
+    # donation links
+    if currencies[currency].donationAddress
+      container.find('.donate').on 'click', =>
+        $('.overlay .donation').show().siblings().hide()
+        $('.overlay').fadeToggle().find('.address').text currencies[currency].donationAddress
+    else
+      container.find('.donate').remove()
+
+# update lane rendering (for resizing and lane toggling
+updateLanes = ->
+  $(".currencies > div").each ->
+    container = $(@)
+    engine = container.find('canvas').data 'engine'
+    if container.is ':visible'
+      engine.resize container.find('canvas').get(0)
+      engine.start()
+    else
+      engine.stop()
+
+showHelp = ->
+  $('.overlay .help').show().siblings().hide()
+  $('.overlay').fadeIn()
+
 # start everything
 $ ->
+  # load prices
   updatePrices Object.keys(currencies)
-  $('.overlay').hide().on 'click', (e) ->
-    $(this).fadeOut() if $(e.target).is('.overlay')
-  $('.currencies > div').each ->
-    currency = $(@).attr 'class'
-    if currencies[currency]?
-      currencies[currency].start showTx.bind(null, currency), showBlock.bind(null, currency)
-      canvas = $ '<canvas></canvas>'
-      $('.'+currency).append canvas
-      lanes[currency] = new CanvasRenderer canvas.get(0)
-
-      # donation links
-      if currencies[currency].donationAddress
-        $(this).find('.donate').on 'click', =>
-          $('.overlay').fadeToggle().find('.address').text currencies[currency].donationAddress
-      else
-        $(this).find('.donate').remove()
+  # set up overlay
+  $('.overlay').on 'click', (e) ->
+    if $('.overlay .help').is(':visible')
+      document.cookie = "nohelp=true; expires=#{new Date(Date.now()+1000*60*60*24*365).toString()}; path=/"
+    $(this).fadeOut() if $(e.target).is('.overlay, .help')
+  $('.overlay').hide() if !!document.cookie.match /nohelp=true/
+  # initialize coins
+  $('.currencies > div').each -> initialize $(@).attr 'class'
+  # listen to resizing
+  $(window).resize updateLanes
+  # set up nav
+  $ 'nav'
+  .on 'click', '.help', showHelp
+  .on 'click', '.right', ->
+    $(".currencies").append($(".currencies > div").first())
+    updateLanes()
+  .on 'click', '.left', ->
+    $(".currencies").prepend($(".currencies > div").last())
+    updateLanes()
