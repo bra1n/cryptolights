@@ -78,7 +78,9 @@ initialize = (currency) ->
     if currencies[currency].donationAddress
       container.find('.donate').on 'click', =>
         $('.overlay .donation').show().siblings().hide()
-        $('.overlay').fadeToggle().find('.address').text currencies[currency].donationAddress
+        $('.overlay').fadeToggle()
+          .find('.address').text currencies[currency].donationAddress
+          .end().find('.donation img').attr 'src', "img/#{currency}-qr.png"
     else
       container.find('.donate').remove()
 
@@ -103,7 +105,7 @@ $ ->
   updatePrices Object.keys(currencies)
   # set up overlay
   $('.overlay').on 'click', (e) ->
-    if $('.overlay .help').is(':visible')
+    if $('.overlay .help').is(':visible') # don't show help at the beginning after closing
       document.cookie = "nohelp=true; expires=#{new Date(Date.now()+1000*60*60*24*365).toString()}; path=/"
     $(this).fadeOut() if $(e.target).is('.overlay, .help')
   $('.overlay').hide() if !!document.cookie.match /nohelp=true/

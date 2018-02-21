@@ -115,6 +115,10 @@ div.overlay .donation {
   display: none;
 }
 
+div.overlay .donation img {
+  margin: 10px;
+}
+
 span.price {
   display: block;
   color: gold;
@@ -151,22 +155,22 @@ div.currencies canvas {
 }
 
 div.btc {
-  background: url('currencies/btc.png') no-repeat center center;
+  background: url('img/btc.png') no-repeat center center;
   background-size: 80% auto;
 }
 
 div.eth {
-  background: url('currencies/eth.png') no-repeat center center;
+  background: url('img/eth.png') no-repeat center center;
   background-size: 80% auto;
 }
 
 div.ltc {
-  background: url('currencies/ltc.png') no-repeat center center;
+  background: url('img/ltc.png') no-repeat center center;
   background-size: 80% auto;
 }
 
 div.xrb {
-  background: url('currencies/xrb.png') no-repeat center center;
+  background: url('img/xrb.png') no-repeat center center;
   background-size: 80% auto;
 }
 

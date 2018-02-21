@@ -2,7 +2,7 @@ class BTC
   constructor: ->
     @ws = null
     @socketUrl = "wss://ws.blockchain.info/inv"
-    @donationAddress = ""
+    @donationAddress = "16DFRg8vsJk1SFevdN1FecDAhmw4Fg4Cip"
 
   start: (txCb, blockCb) ->
     @stop() if @ws

@@ -5,7 +5,7 @@ BTC = class BTC {
   constructor() {
     this.ws = null;
     this.socketUrl = "wss://ws.blockchain.info/inv";
-    this.donationAddress = "";
+    this.donationAddress = "16DFRg8vsJk1SFevdN1FecDAhmw4Fg4Cip";
   }
 
   start(txCb, blockCb) {

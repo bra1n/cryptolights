@@ -122,7 +122,7 @@ initialize = function(currency) {
     if (currencies[currency].donationAddress) {
       return container.find('.donate').on('click', () => {
         $('.overlay .donation').show().siblings().hide();
-        return $('.overlay').fadeToggle().find('.address').text(currencies[currency].donationAddress);
+        return $('.overlay').fadeToggle().find('.address').text(currencies[currency].donationAddress).end().find('.donation img').attr('src', `img/${currency}-qr.png`);
       });
     } else {
       return container.find('.donate').remove();
@@ -156,7 +156,7 @@ $(function() {
   updatePrices(Object.keys(currencies));
   // set up overlay
   $('.overlay').on('click', function(e) {
-    if ($('.overlay .help').is(':visible')) {
+    if ($('.overlay .help').is(':visible')) { // don't show help at the beginning after closing
       document.cookie = `nohelp=true; expires=${new Date(Date.now() + 1000 * 60 * 60 * 24 * 365).toString()}; path=/`;
     }
     if ($(e.target).is('.overlay, .help')) {
