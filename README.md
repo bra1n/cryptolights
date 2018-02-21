@@ -56,18 +56,23 @@ Trail Length | Transaction Fee
 ## CryptoLights screensaver
 
 To set the website up as a screensaver, you'll usually need a third-party tool.
+Once you have the screensaver tool installed, simply use `http://cryptolights.info/#nohelp` as the URL.
+This will prevent the help overlay (and navigation icons) from showing on the screensaver.
+The following links should provide you with a way to set up a screensaver for this website:
 
-### Windows 10
+- Windows 7 - 10: https://github.com/cwc/web-page-screensaver
+- MacOS: https://github.com/liquidx/webviewscreensaver
+- Ubuntu: https://github.com/lmartinking/webscreensaver
 
-http://www.ilovefreesoftware.com/25/windows-10/set-webpage-screensaver-windows-10.html
+## Contributing
 
-### MacOS
-
-https://github.com/liquidx/webviewscreensaver
-
-### Ubuntu
-
-https://github.com/lmartinking/webscreensaver
+This website was built with [Coffeescript](http://coffeescript.org/), CSS and HTML. You'll need a Coffeescript compiler
+to generate the JS files. Maybe I'll add some Gulp tasks in the future to simplify compiling and deployment.
+If you want to see your favorite crypto currency added to the list, you'll need a public websocket where each transaction (and block, if there
+are any) is broadcast. Then simply copy one of the implementations in `/currencies`, change the API and callbacks and
+adjust the HTML and CSS accordingly. If everything works fine, you're probably also going to need the logo of your coin as a background
+image for the new meteor lane. Apart from that, feel free to modify the code however you like and open pull requests or issues for 
+features you'd like to see implemented!
 
 ## Acknowledgements
 

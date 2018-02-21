@@ -108,7 +108,8 @@ $ ->
     if $('.overlay .help').is(':visible') # don't show help at the beginning after closing
       document.cookie = "nohelp=true; expires=#{new Date(Date.now()+1000*60*60*24*365).toString()}; path=/"
     $(this).fadeOut() if $(e.target).is('.overlay, .help')
-  $('.overlay').hide() if !!document.cookie.match /nohelp=true/
+  $('.overlay').hide() if !!document.cookie.match(/nohelp/) or !!location.hash.match(/nohelp/i)
+  $('nav').hide() if !!location.hash.match(/nohelp/i)
   # initialize coins
   $('.currencies > div').each -> initialize $(@).attr 'class'
   # listen to resizing

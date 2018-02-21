@@ -163,8 +163,11 @@ $(function() {
       return $(this).fadeOut();
     }
   });
-  if (!!document.cookie.match(/nohelp=true/)) {
+  if (!!document.cookie.match(/nohelp/) || !!location.hash.match(/nohelp/i)) {
     $('.overlay').hide();
+  }
+  if (!!location.hash.match(/nohelp/i)) {
+    $('nav').hide();
   }
   // initialize coins
   $('.currencies > div').each(function() {
