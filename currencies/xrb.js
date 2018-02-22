@@ -13,6 +13,11 @@ XRB = class XRB {
       this.stop();
     }
     this.ws = new WebSocket(this.socketUrl);
+    this.ws.onclose = () => {
+      return setTimeout((() => {
+        return this.start(txCb, blockCb);
+      }), 1000);
+    };
     this.ws.onopen = () => {
       return this.ping = setInterval((() => {
         return this.ws.send('2');

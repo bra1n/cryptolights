@@ -7,8 +7,13 @@ class XRB
   start: (txCb) ->
     @stop() if @ws
     @ws = new WebSocket @socketUrl
+
+    @ws.onclose = =>
+      setTimeout (=> @start txCb, blockCb), 1000
+
     @ws.onopen = =>
       @ping = setInterval (=> @ws.send '2'), 25*1000
+
     @ws.onmessage = ({data}) =>
       data = data.match /^\d+(\[.+?)$/
       if data

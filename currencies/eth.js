@@ -13,6 +13,11 @@ ETH = class ETH {
       this.stop();
     }
     this.ws = new WebSocket(this.socketUrl);
+    this.ws.onclose = () => {
+      return setTimeout((() => {
+        return this.start(txCb, blockCb);
+      }), 1000);
+    };
     return this.ws.onmessage = ({data}) => {
       data = JSON.parse(data);
       if (data.type === 'tx') {

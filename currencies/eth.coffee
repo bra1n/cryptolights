@@ -7,6 +7,10 @@ class ETH
   start: (txCb, blockCb) ->
     @stop() if @ws
     @ws = new WebSocket @socketUrl
+
+    @ws.onclose = =>
+      setTimeout (=> @start txCb, blockCb), 1000
+
     @ws.onmessage = ({data}) =>
       data = JSON.parse data
       if data.type is 'tx'
