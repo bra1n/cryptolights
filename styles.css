@@ -32,12 +32,15 @@ a.label {
 }
 
 div.marketcap {
-    position: absolute;
-    bottom: 88px;
-    left: 50%;
-    text-align: center;
-    color: #a4d2fd;
-    margin-left: -100px;
+  position: absolute;
+  bottom: 88px;
+  left: 50%;
+  text-align: center;
+  color: #a4d2fd;
+  margin-left: -100px;
+  text-shadow: 0 0 10px #000;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
 }
 
 .marketcap:before {
