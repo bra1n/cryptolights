@@ -82,6 +82,6 @@ This visualisation is implementing on the following APIs:
 - **Ethereum:** http://www.etherlisten.com/
 - **Litecoin:** https://insight.litecore.io/
 - **Nano:** https://www.nanode.co/
-- **Prices:** https://www.cryptocompare.com/api/
+- **Prices:** https://www.cryptocompare.com/api/ and https://coinmarketcap.com/
 
 Furthermore, it uses Google Webfonts and Material Icons.
