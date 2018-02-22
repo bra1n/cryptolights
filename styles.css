@@ -31,6 +31,20 @@ a.label {
   color: white;
 }
 
+div.marketcap {
+    position: absolute;
+    bottom: 88px;
+    left: 50%;
+    text-align: center;
+    color: #a4d2fd;
+    margin-left: -100px;
+}
+
+.marketcap:before {
+    content: "Market Cap: ";
+    color: white;
+}
+
 nav {
   position: absolute;
   color: #a4d2fd;

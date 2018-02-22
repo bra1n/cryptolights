@@ -6,6 +6,12 @@ currencies =
 prices = {}
 stats = {}
 
+currencyFormat =
+  style: 'currency'
+  currency: 'USD'
+  minimumFractionDigits: 0
+  maximumFractionDigits:0
+
 # render TX
 showTx = (engine, currency, tx) ->
   value = tx.amount * (prices[currency] or 1)
@@ -36,6 +42,12 @@ updatePrices = (currencies) ->
         prices[currency] = Math.round(1/price*100)/100
         $(".#{currency} .price").text prices[currency].toLocaleString(undefined, { style: 'currency', currency: 'USD' })
 
+  marketcapAPI = 'https://api.coinmarketcap.com/v1/global/'
+  $.get marketcapAPI, (data) ->
+    if data
+      $(".marketcap").text data.total_market_cap_usd.toLocaleString(undefined, currencyFormat)
+
+
   setTimeout updatePrices.bind(null, currencies), 10*1000
 
 # update stats for a currency, called whenever there is a new TX
@@ -58,7 +70,7 @@ updateStats = (currency, value = 0, fee = 0) ->
   feePerTx = Math.round(last.reduce(((a, b) -> a + b.fee), 0) / last.length * 100)/100
   $(".#{currency} .stats").text """
     #{txPerSecond.toLocaleString()} tx/s (#{stats[currency].count} unconfirmed)
-    #{valuePerTx.toLocaleString(undefined, { style: 'currency', minimumFractionDigits: 0, maximumFractionDigits:0, currency: 'USD' })} value/tx
+    #{valuePerTx.toLocaleString(undefined, currencyFormat)} value/tx
     #{feePerTx.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} fee/tx
   """
 
