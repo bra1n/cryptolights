@@ -41,7 +41,7 @@ div.marketcap {
 }
 
 .marketcap:before {
-    content: "Market Cap: ";
+    content: "Total Market Cap: ";
     color: white;
 }
 
