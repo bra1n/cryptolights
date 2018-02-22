@@ -18,6 +18,11 @@ LTC = class LTC {
       this.stop();
     }
     this.ws = new WebSocket(this.socketUrl);
+    this.ws.onclose = () => {
+      return setTimeout((() => {
+        return this.start(txCb, blockCb);
+      }), 1000);
+    };
     this.ws.onopen = () => {
       this.ws.send('2probe');
       this.ws.send('5');

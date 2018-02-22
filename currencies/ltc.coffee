@@ -13,6 +13,9 @@ class LTC
     @stop() if @ws
     @ws = new WebSocket @socketUrl
 
+    @ws.onclose = =>
+      setTimeout (=> @start txCb, blockCb), 1000
+
     @ws.onopen = =>
       @ws.send '2probe'
       @ws.send '5'

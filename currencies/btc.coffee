@@ -7,9 +7,14 @@ class BTC
   start: (txCb, blockCb) ->
     @stop() if @ws
     @ws = new WebSocket @socketUrl
+
+    @ws.onclose = =>
+      setTimeout (=> @start txCb, blockCb), 1000
+
     @ws.onopen = =>
       @ws.send JSON.stringify op: 'unconfirmed_sub'
       @ws.send JSON.stringify op: 'blocks_sub'
+
     @ws.onmessage = ({data}) =>
       data = JSON.parse data
       if data.op is 'utx'
