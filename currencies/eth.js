@@ -4,7 +4,7 @@ var ETH;
 ETH = class ETH {
   constructor() {
     this.ws = null;
-    this.socketUrl = "ws://ethviewer.live/socket.io/?EIO=3&transport=websocket";
+    this.socketUrl = "wss://ethersocket.herokuapp.com";
     this.donationAddress = "0xf3Ac6fFCD6451682a753695e56425038dE2b79DD";
   }
 
@@ -18,13 +18,10 @@ ETH = class ETH {
         return this.start(txCb, blockCb);
       }), 1000);
     };
-    this.ws.onopen = () => {
-      this.ws.send('2probe');
-      this.ws.send('5');
-      return this.ping = setInterval((() => {
-        return this.ws.send('2');
-      }), 25 * 1000);
-    };
+    this.ws.onopen = () => {};
+    //@ws.send '2probe'
+    //@ws.send '5'
+    //@ping = setInterval (=> @ws.send '2'), 25*1000
     return this.ws.onmessage = ({data}) => {
       var delay, i, len, payload, ref, results, tx, type;
       data = data.match(/^\d+(\[.+?)$/);

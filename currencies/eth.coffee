@@ -1,7 +1,7 @@
 class ETH
   constructor: ->
     @ws = null
-    @socketUrl = "ws://ethviewer.live/socket.io/?EIO=3&transport=websocket"
+    @socketUrl = "wss://ethersocket.herokuapp.com"
     @donationAddress = "0xf3Ac6fFCD6451682a753695e56425038dE2b79DD"
 
   start: (txCb, blockCb) ->
@@ -12,9 +12,9 @@ class ETH
       setTimeout (=> @start txCb, blockCb), 1000
 
     @ws.onopen = =>
-      @ws.send '2probe'
-      @ws.send '5'
-      @ping = setInterval (=> @ws.send '2'), 25*1000
+      #@ws.send '2probe'
+      #@ws.send '5'
+      #@ping = setInterval (=> @ws.send '2'), 25*1000
 
     @ws.onmessage = ({data}) =>
       data = data.match /^\d+(\[.+?)$/
