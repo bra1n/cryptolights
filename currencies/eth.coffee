@@ -1,7 +1,7 @@
 class ETH
   constructor: ->
     @ws = null
-    @socketUrl = "wss://ethersocket.herokuapp.com"
+    @socketUrl = "ws://ethviewer.live/socket.io/?EIO=3&transport=websocket"
     @donationAddress = "0xf3Ac6fFCD6451682a753695e56425038dE2b79DD"
 
   start: (txCb, blockCb) ->
@@ -11,18 +11,29 @@ class ETH
     @ws.onclose = =>
       setTimeout (=> @start txCb, blockCb), 1000
 
+    @ws.onopen = =>
+      @ws.send '2probe'
+      @ws.send '5'
+      @ping = setInterval (=> @ws.send '2'), 25*1000
+
     @ws.onmessage = ({data}) =>
-      data = JSON.parse data
-      if data.type is 'tx'
-        txCb? {
-          amount: data.ethers
-          fee: data.fee
-          link: 'https://etherscan.io/tx/' + data.hash
-          donation: data.to is @donationAddress
-        }
-      else
-        blockCb? count: data.transactions
+      data = data.match /^\d+(\[.+?)$/
+      if data
+        [type, payload] = JSON.parse(data[1])
+        if type is 'txsUpdate'
+          delay = 1000 / payload.data.pending.length
+          for tx in payload.data.pending
+            setTimeout (-> txCb? {
+                amount: tx.value / 1000000000000000000
+                fee: tx.gas * tx.gasPrice / 1000000000000000000
+                link: 'https://etherscan.io/tx/' + tx.hash_b
+                donation: tx.to_b is @donationAddress
+              }), delay
+            delay += delay
+        else
+          blockCb? count: payload.data[0].txs.length
 
   stop: ->
     @ws.close()
+    clearInterval @ping
     @ws = null
