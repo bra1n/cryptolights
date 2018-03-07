@@ -26,7 +26,7 @@ class ETH
             setTimeout (-> txCb? {
                 amount: tx.value / 1000000000000000000
                 fee: tx.gas * tx.gasPrice / 1000000000000000000
-                link: 'https://etherscan.io/tx/' + tx.hash_b
+                link: 'https://etherscan.io/tx/0x' + tx.hash_b
                 donation: tx.to_b is @donationAddress
               }), delay
             delay += delay
