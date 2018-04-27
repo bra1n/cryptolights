@@ -5,7 +5,7 @@ XRB = class XRB {
   constructor() {
     this.ws = null;
     this.socketUrl = "wss://www.nanode.co/socket.io/?EIO=3&transport=websocket";
-    this.donationAddress = "xrb_1ac4dntxugbfxsmmy6wimddwiju7em7qi6zp8ri6fx566swq4j56gwd9ibxw";
+    this.donationAddress = "xrb_1em33f7ewc9mpbargkp14m3uuojz5wt96hzu4tcfb585ds8575gp1fnoxaj3";
   }
 
   start(txCb) {
