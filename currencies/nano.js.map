@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "nano.js",
+  "sourceRoot": "",
+  "sources": [
+    "nano.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA;;AAAM,OAAN,MAAA,KAAA;EACE,WAAa,CAAA,CAAA;IACX,IAAC,CAAA,EAAD,GAAM;IACN,IAAC,CAAA,SAAD,GAAa;IACb,IAAC,CAAA,eAAD,GAAmB;EAHR;;EAKb,KAAO,CAAC,IAAD,CAAA;IACL,IAAW,IAAC,CAAA,EAAZ;MAAA,IAAC,CAAA,IAAD,CAAA,EAAA;;IACA,IAAC,CAAA,EAAD,GAAM,IAAI,SAAJ,CAAc,IAAC,CAAA,SAAf;IAEN,IAAC,CAAA,EAAE,CAAC,OAAJ,GAAc,CAAA,CAAA,GAAA;aACZ,UAAA,CAAW,CAAC,CAAA,CAAA,GAAA;eAAG,IAAC,CAAA,KAAD,CAAO,IAAP,EAAa,OAAb;MAAH,CAAD,CAAX,EAAsC,IAAtC;IADY;IAGd,IAAC,CAAA,EAAE,CAAC,MAAJ,GAAa,CAAA,CAAA,GAAA;MACX,IAAC,CAAA,EAAE,CAAC,IAAJ,CAAS,IAAI,CAAC,SAAL,CAAe;QAAA,KAAA,EAAO,WAAP;QAAoB,IAAA,EAAM,CAAC,KAAD;MAA1B,CAAf,CAAT;aACA,IAAC,CAAA,IAAD,GAAQ,WAAA,CAAY,CAAC,CAAA,CAAA,GAAA;eAAG,IAAC,CAAA,EAAE,CAAC,IAAJ,CAAS,IAAI,CAAC,SAAL,CAAe;UAAA,KAAA,EAAO;QAAP,CAAf,CAAT;MAAH,CAAD,CAAZ,EAA6D,EAAA,GAAG,IAAhE;IAFG;WAIb,IAAC,CAAA,EAAE,CAAC,SAAJ,GAAgB,CAAC,CAAC,IAAD,CAAD,CAAA,GAAA;AACd,UAAA,MAAA,EAAA;MAAA,IAAA,GAAO,IAAI,CAAC,KAAL,CAAW,IAAX;MACP,OAAO,CAAC,GAAR,CAAY,IAAZ;MACA,IAAG,IAAI,CAAC,IAAL,IAAc,IAAI,CAAC,IAAI,CAAC,OAAV,KAAqB,MAAtC;QACE,CAAA,CAAE,MAAF,EAAU,eAAV,CAAA,GAA8B,IAAI,CAAC,IAAI,CAAC,KAAxC;QACA,OAAO,CAAC,GAAR,CAAY,MAAZ,EAAoB,eAApB,EAAqC,IAAI,CAAC,IAAI,CAAC,IAA/C;4CACA,KAAM;UACJ,MAAA,EAAQ,MADJ;UAEJ,GAAA,EAAK,CAFD;UAGJ,IAAA,EAAM,wCAAA,GAA2C,IAAI,CAAC,IAAI,CAAC,IAHvD;UAIJ,QAAA,EAAU,eAAA,KAAmB,IAAC,CAAA;QAJ1B,YAHR;;IAHc;EAXX;;EAwBP,IAAM,CAAA,CAAA;IACJ,IAAC,CAAA,EAAE,CAAC,KAAJ,CAAA;IACA,aAAA,CAAc,IAAC,CAAA,IAAf;WACA,IAAC,CAAA,EAAD,GAAM;EAHF;;AA9BR",
+  "sourcesContent": [
+    "class NANO\n  constructor: ->\n    @ws = null\n    @socketUrl = \"wss://ws.nanocrawler.cc/\"\n    @donationAddress = \"nano_1em33f7ewc9mpbargkp14m3uuojz5wt96hzu4tcfb585ds8575gp1fnoxaj3\"\n\n  start: (txCb) ->\n    @stop() if @ws\n    @ws = new WebSocket @socketUrl\n\n    @ws.onclose = =>\n      setTimeout (=> @start txCb, blockCb), 1000\n\n    @ws.onopen = =>\n      @ws.send JSON.stringify event: 'subscribe', data: ['all']\n      @ping = setInterval (=> @ws.send JSON.stringify event: 'keepalive'), 30*1000\n\n    @ws.onmessage = ({data}) =>\n      data = JSON.parse data\n      console.log data\n      if data.data and data.data.is_send is 'true'\n        { amount, link_as_account } = data.data.block\n        console.log amount, link_as_account, data.data.hash\n        txCb? {\n          amount: amount\n          fee: 0\n          link: 'https://nanocrawler.cc/explorer/block/' + data.data.hash\n          donation: link_as_account is @donationAddress\n        }\n\n  stop: ->\n    @ws.close()\n    clearInterval @ping\n    @ws = null\n"
+  ]
+}

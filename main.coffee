@@ -2,7 +2,7 @@ currencies =
   btc: new BTC()
   eth: new ETH()
   ltc: new LTC()
-  xrb: new XRB()
+  nano: new NANO()
 prices = {}
 stats = {}
 
@@ -42,10 +42,10 @@ updatePrices = (currencies) ->
         prices[currency] = Math.round(1/price*100)/100
         $(".#{currency} .price").text prices[currency].toLocaleString(undefined, { style: 'currency', currency: 'USD' })
 
-  marketcapAPI = 'https://api.coinmarketcap.com/v1/global/'
+  marketcapAPI = 'https://api.coinlore.com/api/global/'
   $.get marketcapAPI, (data) ->
     if data
-      $(".marketcap").text data.total_market_cap_usd.toLocaleString(undefined, currencyFormat)
+      $(".marketcap").text JSON.parse(data)[0].total_mcap.toLocaleString(undefined, currencyFormat)
 
 
   setTimeout updatePrices.bind(null, currencies), 10*1000
@@ -55,7 +55,7 @@ updatePrices = (currencies) ->
 updateStats = (currency, value = 0, fee = 0) ->
   stats[currency] = {last: [], count: 0} unless stats[currency]?
   # increase number of unverified TX
-  stats[currency].count++ unless currency is 'xrb'
+  stats[currency].count++ unless currency is 'nano'
   # calculate stats for last 60s
   last = stats[currency].last
   timestamp = new Date().getTime()
