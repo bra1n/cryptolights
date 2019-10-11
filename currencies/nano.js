@@ -32,10 +32,8 @@ NANO = class NANO {
     return this.ws.onmessage = ({data}) => {
       var amount, link_as_account;
       data = JSON.parse(data);
-      console.log(data);
       if (data.data && data.data.is_send === 'true') {
         ({amount, link_as_account} = data.data.block);
-        console.log(amount, link_as_account, data.data.hash);
         return typeof txCb === "function" ? txCb({
           amount: amount,
           fee: 0,

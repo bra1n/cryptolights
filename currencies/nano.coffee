@@ -17,10 +17,8 @@ class NANO
 
     @ws.onmessage = ({data}) =>
       data = JSON.parse data
-      console.log data
       if data.data and data.data.is_send is 'true'
         { amount, link_as_account } = data.data.block
-        console.log amount, link_as_account, data.data.hash
         txCb? {
           amount: amount
           fee: 0
