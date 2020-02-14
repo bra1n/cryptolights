@@ -5,6 +5,7 @@ currencies = {
   btc: new BTC(),
   eth: new ETH(),
   ltc: new LTC(),
+  xrp: new XRP(),
   nano: new NANO()
 };
 
@@ -82,7 +83,7 @@ updateStats = function(currency, value = 0, fee = 0) {
       count: 0
     };
   }
-  if (currency !== 'nano') {
+  if (!currencies[currency].noBlocks) {
     // increase number of unverified TX
     stats[currency].count++;
   }
@@ -115,8 +116,9 @@ updateStats = function(currency, value = 0, fee = 0) {
 // set up a lane
 initialize = function(currency) {
   var canvas, container, engine;
-  if (currencies[currency] != null) {
+  if ((currencies[currency] != null) && $(`.${currency}`)) {
     container = $(`.${currency}`);
+    container.css('background-image', `url('img/${currency}.png')`);
     container.find("canvas").remove();
     canvas = $('<canvas></canvas>');
     container.append(canvas);

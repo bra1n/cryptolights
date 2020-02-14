@@ -2,6 +2,7 @@ currencies =
   btc: new BTC()
   eth: new ETH()
   ltc: new LTC()
+  xrp: new XRP()
   nano: new NANO()
 prices = {}
 stats = {}
@@ -55,7 +56,7 @@ updatePrices = (currencies) ->
 updateStats = (currency, value = 0, fee = 0) ->
   stats[currency] = {last: [], count: 0} unless stats[currency]?
   # increase number of unverified TX
-  stats[currency].count++ unless currency is 'nano'
+  stats[currency].count++ unless currencies[currency].noBlocks
   # calculate stats for last 60s
   last = stats[currency].last
   timestamp = new Date().getTime()
@@ -76,8 +77,9 @@ updateStats = (currency, value = 0, fee = 0) ->
 
 # set up a lane
 initialize = (currency) ->
-  if currencies[currency]?
+  if currencies[currency]? and $(".#{currency}")
     container = $(".#{currency}")
+    container.css 'background-image', "url('img/#{currency}.png')"
     container.find("canvas").remove()
     canvas = $ '<canvas></canvas>'
     container.append canvas

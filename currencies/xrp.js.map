@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "xrp.js",
+  "sourceRoot": "",
+  "sources": [
+    "xrp.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA;;AAAM,MAAN,MAAA,IAAA;EACE,WAAa,CAAA,CAAA;IACX,IAAC,CAAA,EAAD,GAAM;IACN,IAAC,CAAA,SAAD,GAAa;IACb,IAAC,CAAA,eAAD,GAAmB;IACnB,IAAC,CAAA,QAAD,GAAY;EAJD;;EAMb,KAAO,CAAC,IAAD,CAAA;IACL,IAAW,IAAC,CAAA,EAAZ;MAAA,IAAC,CAAA,IAAD,CAAA,EAAA;;IACA,IAAC,CAAA,EAAD,GAAM,IAAI,SAAJ,CAAc,IAAC,CAAA,SAAf;IAEN,IAAC,CAAA,EAAE,CAAC,OAAJ,GAAc,CAAA,CAAA,GAAA;aACZ,UAAA,CAAW,CAAC,CAAA,CAAA,GAAA;eAAG,IAAC,CAAA,KAAD,CAAO,IAAP,EAAa,OAAb;MAAH,CAAD,CAAX,EAAsC,IAAtC;IADY;IAGd,IAAC,CAAA,EAAE,CAAC,MAAJ,GAAa,CAAA,CAAA,GAAA;aACX,IAAC,CAAA,EAAE,CAAC,IAAJ,CAAS,IAAI,CAAC,SAAL,CAAe;QAAA,OAAA,EAAS,WAAT;QAAqB,OAAA,EAAS,CAAC,cAAD,CAA9B;QAAgD,EAAA,EAAI;MAApD,CAAf,CAAT;IADW;WAGb,IAAC,CAAA,EAAE,CAAC,SAAJ,GAAgB,CAAC,CAAC,IAAD,CAAD,CAAA,GAAA;AACd,UAAA,MAAA,EAAA,WAAA,EAAA,GAAA,EAAA;MAAA,IAAA,GAAO,IAAI,CAAC,KAAL,CAAW,IAAX;MACP,IAAG,IAAI,CAAC,aAAL,KAAsB,YAAtB,IAAuC,IAAI,CAAC,WAAW,CAAC,eAAjB,KAAoC,SAA9E;QACE,CAAA,CAAE,MAAF,EAAU,WAAV,EAAuB,GAAvB,EAA4B,IAA5B,CAAA,GAAqC,IAAI,CAAC,WAA1C;QACA,IAAc,uBAAd;UAAA,MAAA,GAAS,EAAT;;4CACA,KAAM;UACJ,MAAA,EAAQ,MAAA,GAAS,OADb;UAEJ,GAAA,EAAK,GAAA,GAAM,OAFP;UAGJ,IAAA,EAAM,8CAAA,GAAiD,IAHnD;UAIJ,QAAA,EAAU,WAAA,KAAe,IAAC,CAAA;QAJtB,YAHR;;IAFc;EAVX;;EAsBP,IAAM,CAAA,CAAA;IACJ,IAAC,CAAA,EAAE,CAAC,KAAJ,CAAA;WACA,IAAC,CAAA,EAAD,GAAM;EAFF;;AA7BR",
+  "sourcesContent": [
+    "class XRP\n  constructor: ->\n    @ws = null\n    @socketUrl = \"wss://s1.ripple.com/\"\n    @donationAddress = \"\"\n    @noBlocks = yes\n\n  start: (txCb) ->\n    @stop() if @ws\n    @ws = new WebSocket @socketUrl\n\n    @ws.onclose = =>\n      setTimeout (=> @start txCb, blockCb), 1000\n\n    @ws.onopen = =>\n      @ws.send JSON.stringify command: 'subscribe',streams: ['transactions'], id: 1\n\n    @ws.onmessage = ({data}) =>\n      data = JSON.parse data\n      if data.engine_result is 'tesSUCCESS' and data.transaction.TransactionType is 'Payment'\n        { Amount, Destination, Fee, hash } = data.transaction\n        Amount = 0 if Amount.currency?\n        txCb? {\n          amount: Amount / 1000000\n          fee: Fee / 1000000\n          link: 'https://xrpcharts.ripple.com/#/transactions/' + hash\n          donation: Destination is @donationAddress\n        }\n\n  stop: ->\n    @ws.close()\n    @ws = null\n"
+  ]
+}
