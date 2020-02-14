@@ -1,5 +1,5 @@
 # CryptoLights 
-Live transaction visualization for Bitcoin, Ethereum, Litecoin and Nano
+Live transaction visualization for Bitcoin, Ethereum, Litecoin, Ripple and Nano
 
 https://cryptolights.info
 
@@ -8,8 +8,8 @@ https://cryptolights.info
 Payments made through modern crypto currencies are broadcast to the internet where everyone
 can track them. This website takes advantage of that and show a "meteor" descending from the top
 of the page for every transaction that is sent through the network. These transactions are considered
-"unconfirmed" until a new block (on the blockchain) is "mined", confirming these transactions. Nano is an exception here,
-because every wallet has its own blockchain, which means transactions are usually confirmed instantly by the network.
+"unconfirmed" until a new block (on the blockchain) is "mined", confirming these transactions. Ripple and Nano are an exception here,
+because they use a different approach to verify and store transactions.
 
 Whenever a transaction is sent, a meteor will be created in the lane of the corresponding currency.
 Depending on the Dollar volume of the transaction, the meteor will have a certain color and size. For currencies that
@@ -18,15 +18,15 @@ that were paid for this transaction. The same applies to the speed of the meteor
 go faster and also increase the chance to be confirmed in a shorter amount of time.
 
 Every now and then, you will see a blue bar descend in the lanes of BTC, ETH or LTC. This bar represents a block that
-has just been mined. It will have a height depending on the number of confirmed transactions within that block. Nano
-doesn't have a centralised blockchain and thus lacks network-wide blocks.
+has just been mined. It will have a height depending on the number of confirmed transactions within that block. Ripple and Nano
+don't have a centralised blockchain and thus lack network-wide blocks.
 
 Each meteor can also be clicked on to see the transaction that it is based on. 
 
 ### Meteor sizes / colors and transaction volumes
 
-The meteor size and color is based on the amount of money being transfered. (except for donations)
-Ethereum contract transactions usually don't transfer any money (so the transaction volume is $0).
+The meteor size and color is based on the amount of money being transferred. (except for donations)
+Ethereum contract transactions and Ripple IOUs usually don't transfer any money (so the transaction volume is $0).
 Transactions above $1 million will still grow in size but won't change colors beyond red.
 
 Color | Size | Transaction volume
@@ -60,7 +60,7 @@ Once you have the screensaver tool installed, simply use `http://cryptolights.in
 This will prevent the help overlay (and navigation icons) from showing on the screensaver.
 The following links should provide you with a way to set up a screensaver for this website:
 
-- Windows 7 - 10: https://github.com/cwc/web-page-screensaver
+- Windows: https://github.com/cwc/web-page-screensaver
 - MacOS: https://github.com/liquidx/webviewscreensaver
 - Ubuntu: https://github.com/lmartinking/webscreensaver
 
@@ -79,7 +79,8 @@ features you'd like to see implemented!
 This visualisation is implementing on the following APIs:
 
 - **Bitcoin:** https://blockchain.info
-- **Ethereum:** http://www.etherlisten.com/
+- **Ethereum:** http://www.amberdata.io/
+- **Ripple:** http://www.ripple.com/
 - **Litecoin:** https://insight.litecore.io/
 - **Nano:** https://www.nanocrawler.cc/
 - **Prices:** https://www.cryptocompare.com/api/ and https://coinlore.com/
