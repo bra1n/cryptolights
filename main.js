@@ -2,6 +2,7 @@
 var currencies, currencyFormat, initialize, prices, showBlock, showHelp, showTx, stats, updateLanes, updatePrices, updateStats;
 
 currencies = {
+  sum: new SUM(),
   btc: new BTC(),
   eth: new ETH(),
   ltc: new LTC(),
