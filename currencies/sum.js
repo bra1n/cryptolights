@@ -4,7 +4,7 @@ var SUM;
 SUM = class SUM {
   constructor() {
     this.ws = null;
-    this.socketUrl = "wss://insight.sumecore.org/socket.io/?EIO=3&transport=websocket";
+    this.socketUrl = "wss://insight.sumcore.org/socket.io/?EIO=3&transport=websocket";
     this.txApi = "https://insight.sumcore.org/api/tx/";
     this.blockApi = "https://insight.sumcore.org/api/block/";
     this.txFees = [0.000224, 0.0005];
@@ -54,7 +54,7 @@ SUM = class SUM {
           return typeof txCb === "function" ? txCb({
             amount: payload.valueOut,
             fee: Math.random() * Math.abs(this.txFees[0] - this.txFees[1]) + Math.min.apply(0, this.txFees),
-            link: 'https://insight.litecore.io/tx/' + payload.txid,
+            link: 'https://insight.sumcore.org/tx/' + payload.txid,
             donation: !!payload.vout.find((vout) => {
               return Object.keys(vout)[0] === this.donationAddress;
             })
