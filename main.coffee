@@ -1,6 +1,7 @@
 currencies =
   btc: new BTC()
   eth: new ETH()
+  sum: new SUM()
   ltc: new LTC()
   xrp: new XRP()
   nano: new NANO()
