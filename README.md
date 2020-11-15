@@ -1,7 +1,7 @@
 # CryptoLights 
 Live transaction visualization for Bitcoin, Ethereum, Sumcoin, Litecoin, Ripple and Nano
 
-https://
+https://cryptolights.info
 
 ## Explanation
 
@@ -79,8 +79,8 @@ features you'd like to see implemented!
 This visualisation is implementing on the following APIs:
 
 - **Bitcoin:** https://blockchain.info
-- **Sumcoin:** https://insight.sumcore.org/
 - **Ethereum:** http://www.amberdata.io/
+- **Sumcoin:** https://insight.sumcore.org/
 - **Ripple:** http://www.ripple.com/
 - **Litecoin:** https://insight.litecore.io/
 - **Nano:** https://www.nanocrawler.cc/
