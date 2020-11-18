@@ -13,6 +13,17 @@ currencyFormat =
   minimumFractionDigits: 0
   maximumFractionDigits:0
 
+sumcurrency =
+  sum: new SUM()
+prices = {}
+stats = {}
+
+sumcurrencyFormat =
+  style: 'currency'
+  currency: 'USD'
+  minimumFractionDigits: 0
+  maximumFractionDigits:0
+
 # render TX
 showTx = (engine, currency, tx) ->
   value = tx.amount * (prices[currency] or 1)
@@ -48,8 +59,25 @@ updatePrices = (currencies) ->
     if data
       $(".marketcap").text JSON.parse(data)[0].total_mcap.toLocaleString(undefined, currencyFormat)
 
+setTimeout updatePrices.bind(null, currencies), 10*1000
 
-  setTimeout updatePrices.bind(null, currencies), 10*1000
+# get current Sumcoin price
+updatePrices = (sumcurrency) ->
+  sumcurrencyAPI = 'https://rates.slicewallet.org/api/rates'
+  $.get code + price.join(',').toUpperCase(), (data) ->
+    if data
+      for sumcurrency, price of data
+        sumcurrency = sumcurrency.toLowerCase()
+        prices[currency] = Math.round(1/price*100)/100
+        $(".#{sumcurrency} .price").text prices[currency].toLocaleString(undefined, { style: 'currency', sumcurrency: 'USD' })
+
+# get sumcoin marketcap
+  summarketcapAPI = 'https://sumcoinindex.com/rates/marketcap.json'
+  $.get marketcapAPI, (data) ->
+    if data
+      $("marketcap_USD").text JSON.parse(data)[0].total_mcap.toLocaleString(undefined, currencyFormat)
+
+setTimeout updateSumPrice.bind(null, sumcurrency), 10*1000
 
 # update stats for a currency, called whenever there is a new TX
 # to do that, keep a log of the last 60 seconds of tx
