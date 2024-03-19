@@ -5,6 +5,7 @@ currencies = {
   btc: new BTC(),
   eth: new ETH(),
   ltc: new LTC(),
+  sum: new SUM(),
   xrp: new XRP(),
   nano: new NANO()
 };
